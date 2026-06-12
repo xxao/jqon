@@ -14,7 +14,7 @@ class Query(object):
         """Applies query to data."""
         
         # init global variables
-        if not "variables" in kwargs:
+        if "variables" not in kwargs:
             kwargs["variables"] = {}
         
         # apply query

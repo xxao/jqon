@@ -2,13 +2,13 @@
 # Copyright (c) Martin Strohalm. All rights reserved.
 
 from dataclasses import dataclass
-from typing import Any
 from .errors import *
 from .register import register
 from .query import Query
 from .path import Path
 
 UNDEF = object()
+
 
 @dataclass
 @register("var")
@@ -23,7 +23,7 @@ class Variable(Query):
         """Applies query to data."""
         
         # get variables
-        if not "variables" in kwargs:
+        if "variables" not in kwargs:
             kwargs["variables"] = {}
         variables = kwargs["variables"]
         

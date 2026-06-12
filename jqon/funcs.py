@@ -10,7 +10,7 @@ from .path import Path
 @dataclass
 @register("bool")
 class Bool(Query):
-    """Returns bolean value of data."""
+    """Returns boolean value of data."""
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
@@ -28,7 +28,7 @@ class Bool(Query):
 @dataclass
 @register("len")
 class Len(Query):
-    """Returns length given sequence evaluates to True."""
+    """Returns length of given sequence."""
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
