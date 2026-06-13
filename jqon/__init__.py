@@ -1,7 +1,7 @@
 # Created byMartin.cz
 # Copyright (c) Martin Strohalm. All rights reserved.
 
-version = (0, 1, 0)
+version = (0, 1, 1)
 
 from .errors import *
 from .register import register

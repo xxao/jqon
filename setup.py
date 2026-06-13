@@ -17,7 +17,7 @@ classifiers = [
 # main setup
 setup(
     name = 'jqon',
-    version = "0.1.0",
+    version = "0.1.1",
     description = 'JSON expression language for querying Python objects.',
     long_description = long_description,
     long_description_content_type = 'text/markdown',
