@@ -29,11 +29,11 @@ class Unary(Query):
         
         # is true
         if self.operand == "true":
-            return bool(value)
+            return bool(value) is True
         
         # is false
         if self.operand == "false":
-            return not bool(value)
+            return bool(value) is False
         
         # is null
         if self.operand == "null":
