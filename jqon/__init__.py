@@ -13,10 +13,12 @@ from .getters import Attr, Item
 from .unary import Unary
 from .binary import Binary
 from .logical import AND, OR, NOT
-from .funcs import Bool, Len, Any, All, Min, Max, Sum, Avg
+from .funcs import Bool, Len, Min, Max
 from .enumerable import Take, Skip, Slice
+from .enumerable import Any, All
 from .enumerable import Select, Many, Where, Distinct
 from .enumerable import Single, First, Last, Count
+from .enumerable import Sum, Avg
 
 
 # init shortcuts

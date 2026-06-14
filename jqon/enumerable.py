@@ -151,6 +151,70 @@ class Slice(Query):
 
 
 @dataclass
+@register("any")
+class Any(Query):
+    """Returns True if any item of given sequence evaluates to True."""
+    
+    expr: Expr | None = None
+    
+    
+    def apply(self, data, *args, **kwargs):
+        """Applies query to data."""
+        
+        # get values
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
+        
+        # apply
+        return any(data)
+    
+    
+    @classmethod
+    def from_json(cls, data):
+        """Initialize instance from JSON."""
+        
+        # get value
+        value = next(iter(data.values()))
+        
+        # init instance
+        return cls(
+            expr = Expr.from_json(value) if value is not None else None
+        )
+
+
+@dataclass
+@register("all")
+class All(Query):
+    """Returns True if all items of given sequence evaluate to True."""
+    
+    expr: Expr | None = None
+    
+    
+    def apply(self, data, *args, **kwargs):
+        """Applies query to data."""
+        
+        # get values
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
+        
+        # apply
+        return all(data)
+    
+    
+    @classmethod
+    def from_json(cls, data):
+        """Initialize instance from JSON."""
+        
+        # get value
+        value = next(iter(data.values()))
+        
+        # init instance
+        return cls(
+            expr = Expr.from_json(value) if value is not None else None
+        )
+
+
+@dataclass
 @register("select")
 class Select(Query):
     """Selects value from every item in sequence."""
@@ -413,4 +477,69 @@ class Count(Query):
         # init instance
         return cls(
             expr = value
+        )
+
+
+@dataclass
+@register("sum")
+class Sum(Query):
+    """Returns sum of all items of given sequence."""
+    
+    expr: Expr | None = None
+    
+    
+    def apply(self, data, *args, **kwargs):
+        """Applies query to data."""
+        
+        # get values
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
+        
+        # apply
+        return sum(data)
+    
+    
+    @classmethod
+    def from_json(cls, data):
+        """Initialize instance from JSON."""
+        
+        # get value
+        value = next(iter(data.values()))
+        
+        # init instance
+        return cls(
+            expr = Expr.from_json(value) if value is not None else None
+        )
+
+
+@dataclass
+@register("avg", "mean")
+class Avg(Query):
+    """Returns average of all items of given sequence."""
+    
+    expr: Expr | None = None
+    
+    
+    def apply(self, data, *args, **kwargs):
+        """Applies query to data."""
+        
+        # get values
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
+        
+        # apply
+        data = list(data)
+        return sum(data) / len(data) if data else 0
+    
+    
+    @classmethod
+    def from_json(cls, data):
+        """Initialize instance from JSON."""
+        
+        # get value
+        value = next(iter(data.values()))
+        
+        # init instance
+        return cls(
+            expr = Expr.from_json(value) if value is not None else None
         )

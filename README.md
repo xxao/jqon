@@ -24,7 +24,7 @@ or simply by using pip
 - **attr** - `{"attr": NAME}` is equivalent to `getattr(input_data, NAME)`
 - **item** - `{"item": KEY}` is equivalent to `input_data[KEY]`
 
-### Path Query
+### Expression Query
 
 - **expr** - 
 
@@ -37,18 +37,14 @@ or simply by using pip
 
 - **bool** - `{"bool": null}` is equivalent to `bool(input_data)`
 - **len** - `{"len": null}` is equivalent to `len(input_data)`
-- **any** - `{"any": EXPR}` is equivalent to `any(EXPR(item) for item in input_data)`
-- **all** - `{"all": EXPR}` is equivalent to `all(EXPR(item) for item in input_data)`
-- **min** - `{"min": KEY}` is equivalent to `min(input_data, key=lambda x: KEY(x))`
-- **max** - `{"max": KEY}` is equivalent to `max(input_data, key=lambda x: KEY(x))`
-- **sum** - `{"sum": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data)`
-- **avg** - `{"avg": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data) / len(input_data)`
+- **min** - `{"min": KEY}` is equivalent to `min(input_data, key=KEY)`
+- **max** - `{"max": KEY}` is equivalent to `max(input_data, key=KEY)`
 
 ### Logical Queries
 
-- **AND** - `{"AND": [EXPR, ...]}` is equivalent to `all(EXPR(input_data), ...`
-- **OR** - `{"OR": [EXPR, ...]}` is equivalent to `any(EXPR(input_data), ...`
-- **NOT** -  `{"NOT": [EXPR, ...]}` is equivalent to `not any(EXPR(input_data), ...`
+- **AND** - `{"AND": [EXPR, ...]}` is equivalent to `all(EXPR(input_data), ...)`
+- **OR** - `{"OR": [EXPR, ...]}` is equivalent to `any(EXPR(input_data), ...)`
+- **NOT** -  `{"NOT": [EXPR, ...]}` is equivalent to `not any(EXPR(input_data), ...)`
 
 ### Unary Queries
 
@@ -76,6 +72,8 @@ or simply by using pip
 - **take** - `{"take": COUNT}` is equivalent to `input_data[:COUNT]`
 - **skip** - `{"skip": COUNT}` is equivalent to `input_data[COUNT:]`
 - **slice** - `{"slice": [START:STOP:END]}` is equivalent to `input_data[START:STOP:END]`
+- **any** - `{"any": EXPR}` is equivalent to `any(EXPR(item) for item in input_data)`
+- **all** - `{"all": EXPR}` is equivalent to `all(EXPR(item) for item in input_data)`
 - **select** - `{"select": EXPR}` is equivalent to `[EXPR(item) for item in input_data]`
 - **many** - `{"many": EXPR}` is equivalent to `[child for item in input_data for child in EXPR(child)]`
 - **where** - `{"where": EXPR}` is equivalent to `[item for item in input_data if EXPR(item)]`
@@ -84,6 +82,8 @@ or simply by using pip
 - **first** - `{"first": EXPR}` is equivalent to `next(item for item in input_data if EXPR(item))`
 - **last** - `{"last":  EXPR}}` is equivalent to `next(item for item in reversed(input_data) if EXPR(item))`
 - **count** - `{"count": EXPR}` is equivalent to `sum(1 for item in input_data if EXPR(item)`
+- **sum** - `{"sum": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data)`
+- **avg** - `{"avg": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data) / len(input_data)`
 
 
 ## Requirements
