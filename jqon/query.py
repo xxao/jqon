@@ -41,11 +41,11 @@ class Query(object):
         
         # sequence of queries
         if isinstance(data, list):
-            q_type = "path"
+            q_type = "expr"
         
-        # path expression
+        # expression
         elif isinstance(data, str) and data.startswith("$"):
-            q_type = "path"
+            q_type = "expr"
         
         # not query
         elif not isinstance(data, dict) or len(data) != 1:

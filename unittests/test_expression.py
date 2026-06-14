@@ -9,7 +9,7 @@ except: from .data import *
 
 
 class TestCase(unittest.TestCase):
-    """Test case for path query."""
+    """Test case for expression query."""
     
     
     def test_single(self):
@@ -18,13 +18,13 @@ class TestCase(unittest.TestCase):
         # init data
         data = P1
         
-        # test from Path
+        # test from Expr
         text = '{"attr": "age"}'
-        query = jq.Path.from_text(text)
+        query = jq.Expr.from_text(text)
         self.assertEqual(data.age, query(data))
         
         # test from Query
-        text = f'{{"path": {text}}}'
+        text = f'{{"expr": {text}}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.age, query(data))
     
@@ -42,14 +42,14 @@ class TestCase(unittest.TestCase):
         ]
         """
         
-        query = jq.Path.from_text(text)
+        query = jq.Expr.from_text(text)
         self.assertEqual(data.address.city, query(data))
         
         query = jq.Query.from_text(text)
         self.assertEqual(data.address.city, query(data))
         
         # test dict
-        text = f'{{"path": {text}}}'
+        text = f'{{"expr": {text}}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.address.city, query(data))
     
@@ -62,20 +62,20 @@ class TestCase(unittest.TestCase):
         
         # test simple
         text = "$age"
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data.age, query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.age, query(data))
         
         # test chain
         text = "$address.city"
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data.address.city, query(data))
         
         # test from query
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.address.city, query(data))
     
@@ -86,20 +86,20 @@ class TestCase(unittest.TestCase):
         # test simple
         text = "$len()"
         data = P3.children
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(len(data), query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(len(data), query(data))
         
         # test chain
         text = "$children.len()"
         data = P3
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(len(data.children), query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(len(data.children), query(data))
     
@@ -110,20 +110,20 @@ class TestCase(unittest.TestCase):
         # test simple
         text = "$[1]"
         data = P3.children
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data[1], query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data[1], query(data))
         
         # test attr
         text = "$children[1]"
         data = P3
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data.children[1], query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.children[1], query(data))
     
@@ -134,20 +134,20 @@ class TestCase(unittest.TestCase):
         # test simple
         text = "$[lego]"
         data = P1.items
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data["lego"], query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data["lego"], query(data))
         
         # test attr
         text = "$items[lego]"
         data = P1
-        query = jq.Path.from_json(text)
+        query = jq.Expr.from_json(text)
         self.assertEqual(data.items["lego"], query(data))
         
-        text = f'{{"path": "{text}"}}'
+        text = f'{{"expr": "{text}"}}'
         query = jq.Query.from_text(text)
         self.assertEqual(data.items["lego"], query(data))
 

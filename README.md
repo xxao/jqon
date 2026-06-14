@@ -26,38 +26,38 @@ or simply by using pip
 
 ### Path Query
 
-- **path** - 
+- **expr** - 
 
 ### Value Queries
 
 - **value** - `{"value": VALUE}`
-- **variable** - `{"var": [NAME, PATH]}`
+- **variable** - `{"var": [NAME, EXPR]}`
 
 ### Functional Queries
 
 - **bool** - `{"bool": null}` is equivalent to `bool(input_data)`
 - **len** - `{"len": null}` is equivalent to `len(input_data)`
-- **any** - `{"any": PATH}` is equivalent to `any(PATH(item) for item in input_data)`
-- **all** - `{"all": PATH}` is equivalent to `all(PATH(item) for item in input_data)`
-- **min** - `{"min": PATH}` is equivalent to `min(input_data, key=lambda x: PATH(x))`
-- **max** - `{"max": PATH}` is equivalent to `max(input_data, key=lambda x: PATH(x))`
-- **sum** - `{"sum": PATH}` is equivalent to `sum(PATH(item) for item in input_data)`
-- **avg** - `{"avg": PATH}` is equivalent to `sum(PATH(item) for item in input_data) / len(input_data)`
+- **any** - `{"any": EXPR}` is equivalent to `any(EXPR(item) for item in input_data)`
+- **all** - `{"all": EXPR}` is equivalent to `all(EXPR(item) for item in input_data)`
+- **min** - `{"min": KEY}` is equivalent to `min(input_data, key=lambda x: KEY(x))`
+- **max** - `{"max": KEY}` is equivalent to `max(input_data, key=lambda x: KEY(x))`
+- **sum** - `{"sum": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data)`
+- **avg** - `{"avg": EXPR}` is equivalent to `sum(EXPR(item) for item in input_data) / len(input_data)`
 
 ### Logical Queries
 
-- **AND** - `{"AND": [PATH, ...]}` is equivalent to `all(PATH(input_data), ...`
-- **OR** - `{"OR": [PATH, ...]}` is equivalent to `any(PATH(input_data), ...`
-- **NOT** -  `{"NOT": [PATH, ...]}` is equivalent to `not any(PATH(input_data), ...`
+- **AND** - `{"AND": [EXPR, ...]}` is equivalent to `all(EXPR(input_data), ...`
+- **OR** - `{"OR": [EXPR, ...]}` is equivalent to `any(EXPR(input_data), ...`
+- **NOT** -  `{"NOT": [EXPR, ...]}` is equivalent to `not any(EXPR(input_data), ...`
 
 ### Unary Queries
 
-- **true** - `{"true": PATH}` is equivalent to `bool(PATH(input_data)) is True`
-- **false** - `{"false": PATH}` is equivalent to `bool(PATH(input_data)) is False`
-- **null** - `{"null": PATH}` is equivalent to `PATH(input_data) is None`
-- **not_null** - `{"not_null": PATH}` is equivalent to `PATH(input_data) is not None`
-- **empty** - `{"empty": PATH}` is equivalent to `PATH(input_data) in (None, "", [], (), {})`
-- **not_empty** - `{"not_empty": PATH}}` is equivalent to `PATH(input_data) not in (None, "", [], (), {})`
+- **true** - `{"true": EXPR}` is equivalent to `bool(EXPR(input_data)) is True`
+- **false** - `{"false": EXPR}` is equivalent to `bool(EXPR(input_data)) is False`
+- **null** - `{"null": EXPR}` is equivalent to `EXPR(input_data) is None`
+- **not_null** - `{"not_null": EXPR}` is equivalent to `EXPR(input_data) is not None`
+- **empty** - `{"empty": EXPR}` is equivalent to `EXPR(input_data) in (None, "", [], (), {})`
+- **not_empty** - `{"not_empty": EXPR}}` is equivalent to `EXPR(input_data) not in (None, "", [], (), {})`
 
 ### Binary Queries
 
@@ -76,14 +76,14 @@ or simply by using pip
 - **take** - `{"take": COUNT}` is equivalent to `input_data[:COUNT]`
 - **skip** - `{"skip": COUNT}` is equivalent to `input_data[COUNT:]`
 - **slice** - `{"slice": [START:STOP:END]}` is equivalent to `input_data[START:STOP:END]`
-- **select** - `{"select": PATH}` is equivalent to `[PATH(item) for item in input_data]`
-- **many** - `{"many": PATH}` is equivalent to `[child for item in input_data for child in PATH(child)]`
-- **where** - `{"where": PATH}` is equivalent to `[item for item in input_data if PATH(item)]`
-- **distinct** - `{"distinct": PATH}`
-- **single** - `{"single": PATH}`
-- **first** - `{"first": PATH}` is equivalent to `next(item for item in input_data if PATH(item))`
-- **last** - `{"last":  PATH}}` is equivalent to `next(item for item in reversed(input_data) if PATH(item))`
-- **count** - `{"count": PATH}` is equivalent to `sum(1 for item in input_data if PATH(item)`
+- **select** - `{"select": EXPR}` is equivalent to `[EXPR(item) for item in input_data]`
+- **many** - `{"many": EXPR}` is equivalent to `[child for item in input_data for child in EXPR(child)]`
+- **where** - `{"where": EXPR}` is equivalent to `[item for item in input_data if EXPR(item)]`
+- **distinct** - `{"distinct": EXPR}`
+- **single** - `{"single": EXPR}`
+- **first** - `{"first": EXPR}` is equivalent to `next(item for item in input_data if EXPR(item))`
+- **last** - `{"last":  EXPR}}` is equivalent to `next(item for item in reversed(input_data) if EXPR(item))`
+- **count** - `{"count": EXPR}` is equivalent to `sum(1 for item in input_data if EXPR(item)`
 
 
 ## Requirements

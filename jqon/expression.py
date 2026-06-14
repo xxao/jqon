@@ -10,8 +10,8 @@ RE_INDEX = re.compile(r'^(-?\d+)$')
 
 
 @dataclass
-@register("path", "get")
-class Path(Query):
+@register("expr")
+class Expr(Query):
     """Gets value by sequence of queries."""
     
     queries: list[Query] = ()
@@ -29,12 +29,12 @@ class Path(Query):
     
     @staticmethod
     def parse(expr):
-        """Parses selector from string expression."""
+        """Parses expression string."""
         
         # init buff
         queries = []
         
-        # remove path marker
+        # remove expression marker
         if expr.startswith("$"):
             expr = expr[1:]
         
@@ -91,8 +91,8 @@ class Path(Query):
         # init from dict
         if isinstance(data, dict):
             
-            # init path
-            if "path" in data or "get" in data:
+            # init own dict
+            if "expr" in data:
                 return cls.from_json(next(iter(data.values())))
             
             # init from single query

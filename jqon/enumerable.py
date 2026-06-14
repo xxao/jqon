@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .errors import *
 from .register import register
 from .query import Query
-from .path import Path
+from .expression import Expr
 
 
 @dataclass
@@ -13,7 +13,7 @@ from .path import Path
 class Take(Query):
     """Takes number of items from sequence."""
     
-    count: int | Path | None = None
+    count: int | Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -35,9 +35,9 @@ class Take(Query):
         # get value
         count = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if not isinstance(count, (int, type(None))):
-            count = Path.from_json(count)
+            count = Expr.from_json(count)
         
         # init instance
         return cls(
@@ -50,7 +50,7 @@ class Take(Query):
 class Skip(Query):
     """Skips number of items from sequence."""
     
-    count: int | Path | None = None
+    count: int | Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -72,9 +72,9 @@ class Skip(Query):
         # get value
         count = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if not isinstance(count, (int, type(None))):
-            count = Path.from_json(count)
+            count = Expr.from_json(count)
         
         # init instance
         return cls(
@@ -87,9 +87,9 @@ class Skip(Query):
 class Slice(Query):
     """Takes slice of items from sequence."""
     
-    start: int | Path | None = None
-    end: int | Path | None = None
-    step: int | Path | None = None
+    start: int | Expr | None = None
+    end: int | Expr | None = None
+    step: int | Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -134,13 +134,13 @@ class Slice(Query):
         end = values[1] if len(values) > 1 else None
         step = values[2] if len(values) > 2 else None
         
-        # convert to paths
+        # convert to expr
         if not isinstance(start, (int, type(None))):
-            start = Path.from_json(start)
+            start = Expr.from_json(start)
         if not isinstance(end, (int, type(None))):
-            end = Path.from_json(end)
+            end = Expr.from_json(end)
         if not isinstance(step, (int, type(None))):
-            step = Path.from_json(step)
+            step = Expr.from_json(step)
         
         # init instance
         return cls(
@@ -155,14 +155,14 @@ class Slice(Query):
 class Select(Query):
     """Selects value from every item in sequence."""
     
-    path: Path
+    expr: Expr
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # select values
-        return [self.path(item, *args, **kwargs) for item in data]
+        return [self.expr(item, *args, **kwargs) for item in data]
     
     
     @classmethod
@@ -172,13 +172,13 @@ class Select(Query):
         # get values
         value = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if value is not None:
-            value = Path.from_json(value)
+            value = Expr.from_json(value)
         
         # init instance
         return cls(
-            path = value
+            expr = value
         )
 
 
@@ -187,15 +187,15 @@ class Select(Query):
 class Many(Query):
     """Flattens value from every item in sequence."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get values
-        if isinstance(self.path, Query):
-            data = (self.path(item, *args, **kwargs) for item in data)
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
         
         # flatten lists
         return [item for chain in data for item in chain]
@@ -208,13 +208,13 @@ class Many(Query):
         # get values
         value = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if value is not None:
-            value = Path.from_json(value)
+            value = Expr.from_json(value)
         
         # init instance
         return cls(
-            path = value
+            expr = value
         )
 
 
@@ -223,14 +223,14 @@ class Many(Query):
 class Where(Query):
     """Gets items from sequence where condition met."""
     
-    path: Path
+    expr: Expr
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # filter items
-        return [item for item in data if self.path(item, *args, **kwargs)]
+        return [item for item in data if self.expr(item, *args, **kwargs)]
     
     
     @classmethod
@@ -242,7 +242,7 @@ class Where(Query):
         
         # init instance
         return cls(
-            path = Path.from_json(value)
+            expr = Expr.from_json(value)
         )
 
 
@@ -251,21 +251,21 @@ class Where(Query):
 class Distinct(Query):
     """Gets distinct items from sequence."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # check selector
-        if not isinstance(self.path, Query):
+        if not isinstance(self.expr, Query):
             return list(set(data))
         
         # find distinct
         seen = set()
         items = []
         for item in data:
-            key = self.path(item, *args, **kwargs)
+            key = self.expr(item, *args, **kwargs)
             if key not in seen:
                 seen.add(key)
                 items.append(item)
@@ -280,13 +280,13 @@ class Distinct(Query):
         # get value
         value = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if value is not None:
-            value = Path.from_json(value)
+            value = Expr.from_json(value)
         
         # init instance
         return cls(
-            path = value
+            expr = value
         )
 
 
@@ -295,15 +295,15 @@ class Distinct(Query):
 class Single(Query):
     """Gets the single item from sequence where condition met."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get data
-        if isinstance(self.path, Query):
-            data = (item for item in data if self.path(item, *args, **kwargs))
+        if isinstance(self.expr, Query):
+            data = (item for item in data if self.expr(item, *args, **kwargs))
         
         # use single
         i = -1
@@ -327,13 +327,13 @@ class Single(Query):
         # get value
         value = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if value is not None:
-            value = Path.from_json(value)
+            value = Expr.from_json(value)
         
         # init instance
         return cls(
-            path = value
+            expr = value
         )
 
 
@@ -347,8 +347,8 @@ class First(Single):
         """Applies query to data."""
         
         # get data
-        if isinstance(self.path, Query):
-            data = (item for item in data if self.path(item, *args, **kwargs))
+        if isinstance(self.expr, Query):
+            data = (item for item in data if self.expr(item, *args, **kwargs))
         
         # use first
         for item in data:
@@ -369,8 +369,8 @@ class Last(Single):
         
         # get data
         data = reversed(data)
-        if isinstance(self.path, Query):
-            data = (item for item in data if self.path(item, *args, **kwargs))
+        if isinstance(self.expr, Query):
+            data = (item for item in data if self.expr(item, *args, **kwargs))
         
         # use first
         for item in data:
@@ -385,18 +385,18 @@ class Last(Single):
 class Count(Query):
     """Gets count of items in sequence where condition met."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # check selector
-        if not isinstance(self.path, Query):
+        if not isinstance(self.expr, Query):
             return len(data)
         
         # count true
-        return sum(1 for item in data if self.path(item, *args, **kwargs))
+        return sum(1 for item in data if self.expr(item, *args, **kwargs))
     
     
     @classmethod
@@ -406,11 +406,11 @@ class Count(Query):
         # get value
         value = next(iter(data.values()))
         
-        # convert to path
+        # convert to expr
         if value is not None:
-            value = Path.from_json(value)
+            value = Expr.from_json(value)
         
         # init instance
         return cls(
-            path = value
+            expr = value
         )

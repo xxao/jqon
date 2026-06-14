@@ -1,14 +1,14 @@
 # Created byMartin.cz
 # Copyright (c) Martin Strohalm. All rights reserved.
 
-version = (0, 1, 1)
+version = (0, 2, 0)
 
 from .errors import *
 from .register import register
 from .query import Query
 from .value import Value
 from .variable import Variable
-from .path import Path
+from .expression import Expr
 from .getters import Attr, Item
 from .unary import Unary
 from .binary import Binary

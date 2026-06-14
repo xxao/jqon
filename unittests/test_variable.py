@@ -51,10 +51,10 @@ class TestCase(unittest.TestCase):
         query = jq.from_text(text)
         self.assertEqual(42, query(data))
         
-        # test path query
+        # test expr query
         text = """[
             {"var": ["my_var", 42]},
-            {"path": "$my_var"}
+            {"expr": "$my_var"}
         ]
         """
         
@@ -72,8 +72,8 @@ class TestCase(unittest.TestCase):
         self.assertTrue(query(data))
     
     
-    def test_path(self):
-        """Tests path value accessible in subsequent queries."""
+    def test_expr(self):
+        """Tests expr value accessible in subsequent queries."""
         
         # init data
         data = [P1, P2, P3]
@@ -88,10 +88,10 @@ class TestCase(unittest.TestCase):
         query = jq.from_text(text)
         self.assertEqual(data[2].age, query(data))
         
-        # test path query
+        # test expr query
         text = """[
             {"var": ["my_var", "$[2].age"]},
-            {"path": "$my_var"}
+            {"expr": "$my_var"}
         ]
         """
         

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .errors import *
 from .register import register
 from .query import Query
-from .path import Path
+from .expression import Expr
 
 UNDEF = object()
 
@@ -16,7 +16,7 @@ class Variable(Query):
     """Keeps value as variable."""
     
     name: str = None
-    value: Path | UNDEF = UNDEF
+    value: Expr | UNDEF = UNDEF
     
     
     def apply(self, data, *args, **kwargs):
@@ -64,5 +64,5 @@ class Variable(Query):
         # init instance
         return cls(
             name = values[0],
-            value = Path.from_json(values[1])
+            value = Expr.from_json(values[1])
         )

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .errors import *
 from .register import register
 from .query import Query
-from .path import Path
+from .expression import Expr
 
 
 @dataclass
@@ -16,8 +16,8 @@ class Binary(Query):
     """Evaluates binary condition to boolean."""
     
     operand: str
-    left: Path | None = None
-    right: Path | None = None
+    left: Expr | None = None
+    right: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -97,11 +97,11 @@ class Binary(Query):
             left = values[0]
             right = values[1]
         
-        # convert paths
+        # convert to expr
         if left is not None:
-            left = Path.from_json(left)
+            left = Expr.from_json(left)
         if right is not None:
-            right = Path.from_json(right)
+            right = Expr.from_json(right)
         
         # init instance
         return cls(

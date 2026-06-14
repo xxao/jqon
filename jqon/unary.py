@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .errors import *
 from .register import register
 from .query import Query
-from .path import Path
+from .expression import Expr
 
 
 @dataclass
@@ -16,7 +16,7 @@ class Unary(Query):
     """Evaluates unary condition to boolean."""
     
     operand: str
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -24,8 +24,8 @@ class Unary(Query):
         
         # get value
         value = data
-        if isinstance(self.path, Query):
-            value = self.path(data, *args, **kwargs)
+        if isinstance(self.expr, Query):
+            value = self.expr(data, *args, **kwargs)
         
         # is true
         if self.operand == "true":
@@ -61,14 +61,14 @@ class Unary(Query):
         
         # get values
         operand = next(iter(data))
-        path = next(iter(data.values()))
+        expr = next(iter(data.values()))
         
-        # convert to path
-        if path is not None:
-            path = Path.from_json(path)
+        # convert to expr
+        if expr is not None:
+            expr = Expr.from_json(expr)
         
         # init instance
         return cls(
             operand = operand,
-            path = path
+            expr = expr
         )

@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from .register import register
 from .query import Query
-from .path import Path
+from .expression import Expr
 
 
 @dataclass
@@ -48,15 +48,15 @@ class Len(Query):
 class Any(Query):
     """Returns True if any item of given sequence evaluates to True."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get values
-        if isinstance(self.path, Query):
-            data = (self.path(item, *args, **kwargs) for item in data)
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
         
         # apply
         return any(data)
@@ -71,7 +71,7 @@ class Any(Query):
         
         # init instance
         return cls(
-            path = Path.from_json(value) if value is not None else None
+            expr = Expr.from_json(value) if value is not None else None
         )
 
 
@@ -80,15 +80,15 @@ class Any(Query):
 class All(Query):
     """Returns True if all items of given sequence evaluate to True."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get values
-        if isinstance(self.path, Query):
-            data = (self.path(item, *args, **kwargs) for item in data)
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
         
         # apply
         return all(data)
@@ -103,7 +103,7 @@ class All(Query):
         
         # init instance
         return cls(
-            path = Path.from_json(value) if value is not None else None
+            expr = Expr.from_json(value) if value is not None else None
         )
 
 
@@ -112,7 +112,7 @@ class All(Query):
 class Min(Query):
     """Returns minimum item from given sequence."""
     
-    key: Path | None = None
+    key: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -136,7 +136,7 @@ class Min(Query):
         
         # init instance
         return cls(
-            key = Path.from_json(value) if value is not None else None
+            key = Expr.from_json(value) if value is not None else None
         )
 
 
@@ -145,7 +145,7 @@ class Min(Query):
 class Max(Query):
     """Returns maximum item from given sequence."""
     
-    key: Path | None = None
+    key: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
@@ -169,7 +169,7 @@ class Max(Query):
         
         # init instance
         return cls(
-            key = Path.from_json(value) if value is not None else None
+            key = Expr.from_json(value) if value is not None else None
         )
 
 
@@ -178,15 +178,15 @@ class Max(Query):
 class Sum(Query):
     """Returns sum of all items of given sequence."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get values
-        if isinstance(self.path, Query):
-            data = (self.path(item, *args, **kwargs) for item in data)
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
         
         # apply
         return sum(data)
@@ -201,7 +201,7 @@ class Sum(Query):
         
         # init instance
         return cls(
-            path = Path.from_json(value) if value is not None else None
+            expr = Expr.from_json(value) if value is not None else None
         )
 
 
@@ -210,15 +210,15 @@ class Sum(Query):
 class Avg(Query):
     """Returns average of all items of given sequence."""
     
-    path: Path | None = None
+    expr: Expr | None = None
     
     
     def apply(self, data, *args, **kwargs):
         """Applies query to data."""
         
         # get values
-        if isinstance(self.path, Query):
-            data = (self.path(item, *args, **kwargs) for item in data)
+        if isinstance(self.expr, Query):
+            data = (self.expr(item, *args, **kwargs) for item in data)
         
         # apply
         data = list(data)
@@ -234,5 +234,5 @@ class Avg(Query):
         
         # init instance
         return cls(
-            path = Path.from_json(value) if value is not None else None
+            expr = Expr.from_json(value) if value is not None else None
         )
